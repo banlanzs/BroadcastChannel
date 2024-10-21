@@ -1,10 +1,10 @@
 ---
 import List from '../components/list.astro'
-// src/pages/index.astro
+
 import { fetchAllChannelData } from '../lib/telegram';
 
 const posts = await fetchAllChannelData();
-// Render the posts fetched from multiple channels
+
 
 
 export const prerender = false
@@ -12,6 +12,4 @@ export const prerender = false
 
 <List channel={channel} after={false} />
 
-//import { getChannelInfo } from '../lib/telegram'
 
-//const channel = await getChannelInfo(Astro)
