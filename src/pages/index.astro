@@ -1,9 +1,8 @@
 ---
 import List from '../components/list.astro'
+import { getChannelInfo } from '../lib/telegram'
 
-import { fetchAllChannelData } from '../lib/telegram';
-
-const posts = await fetchAllChannelData();
+const channel = await getChannelInfo(Astro)
 
 
 
