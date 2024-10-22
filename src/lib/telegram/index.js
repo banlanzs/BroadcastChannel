@@ -4,6 +4,11 @@ import { LRUCache } from 'lru-cache'
 import flourite from 'flourite'
 import prism from '../prism'
 import { getEnv } from '../env'
+//////////////////////////
+  // 引入必要的库
+import { getEnv } from './env'; // 假设这里引用了 env.js 里获取环境变量的逻辑
+import { randomInt } from 'crypto'; // 用于生成随机整数
+////////////////////////////////////////
 
 
 const cache = new LRUCache({
@@ -185,7 +190,28 @@ export async function getChannelInfo(Astro, { before = '', after = '', q = '', t
 
   // Where t.me can also be telegram.me, telegram.dog
   const host = getEnv(import.meta.env, Astro, 'TELEGRAM_HOST') ?? 't.me'
-  const channel = getEnv(import.meta.env, Astro, 'CHANNEL')
+  // const channel = getEnv(import.meta.env, Astro, 'CHANNEL')
+  ////////////////////////////////////////////////////////////////////////////
+
+
+// 解析 CHANNEL 环境变量并将其转化为频道数组
+const channelEnv = import.meta.env.CHANNEL || '';
+const channelList = channelEnv.split(',').map(name => name.trim()).filter(Boolean); // 将输入字符串按逗号分割，去掉空格和无效值
+
+// 从频道数组中随机选择一个频道
+let selectedChannel = '';
+if (channelList.length > 0) {
+  const randomIndex = randomInt(0, channelList.length); // 随机选择一个索引
+  selectedChannel = channelList[randomIndex];
+} else {
+  console.error('CHANNEL 环境变量未设置或无效');
+}
+
+// 将选定的频道传递到原来的逻辑中
+const channel = getEnv({ ...import.meta.env, CHANNEL: selectedChannel }, Astro, 'CHANNEL');
+
+// 后续代码继续使用变量 channel ...
+///////////////////////////////////////////////////////////////////////////////////
   const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
 
   const url = id ? `https://${host}/${channel}/${id}?embed=1&mode=tme` : `https://${host}/s/${channel}`
